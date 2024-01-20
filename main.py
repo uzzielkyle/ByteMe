@@ -12,7 +12,7 @@ class Interface:
             '1': self.not_available_screen,
             # '1': self.binary_operations_menu, 
             '2': self.number_system_conversion_menu, 
-            '3': self.exit,
+            '3': self.exit_screen,
         }
         self.BINARY_OPERATIONS_OPTIONS = {}
         self.NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES = {
@@ -132,7 +132,7 @@ class Interface:
         
         self.main_menu()
     
-    def exit(self):
+    def exit_screen(self):
         self.clear_screen()
         
         text_display = """

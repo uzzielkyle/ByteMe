@@ -112,7 +112,7 @@ class Interface:
         print(f'Hex: {conversion.to_hex(number)}')
         input('...')
         
-        self.main_menu()
+        self.number_system_conversion_menu()
         
     def not_available_screen(self):
         self.clear_screen()

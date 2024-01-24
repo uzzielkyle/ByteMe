@@ -1,5 +1,3 @@
-from binaryoperations.binary_operation import *
-
 class BinaryDivision:
     @staticmethod
     def perform(binary_num1, binary_num2):

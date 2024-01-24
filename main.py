@@ -1,4 +1,4 @@
-from binary_operations import *
+from binaryoperations import *
 from conversions import *
 from os import system
 from time import sleep
@@ -9,12 +9,24 @@ class Interface:
     
     def __init__(self) -> None:
         self.MAIN_MENU_OPTIONS = {
-            '1': self.not_available_screen,
-            # '1': self.binary_operations_menu, 
+            '1': self.binary_operations_menu, 
             '2': self.number_system_conversion_menu, 
             '3': self.exit_screen,
         }
-        self.BINARY_OPERATIONS_OPTIONS = {}
+        self.BINARY_OPERATIONS_OPTIONS = {
+            '1': 'Division',
+            '2': 'Multiplication',
+            '3': 'Subtraction',
+            '4': 'Addition',
+            '5': 'Negative',
+        }
+        self.BINARY_OPERATIONS_SCREEN_TILES = {
+            '1': BinaryDivision(),
+            #'2': BinaryMultiplication(),
+            #'3': BinarySubtraction(),
+            #'4': BinaryAddition(),
+            #'5': BinaryNegative(),
+        }
         self.NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES = {
             '1': 'Binary to X',
             '2': 'Decimal to X',
@@ -67,6 +79,23 @@ class Interface:
         print(menu_display)
         choice = input('Enter desired option number: ')
         
+        if choice == '6':
+            self.main_menu()  # Exit the loop and return to the main menu
+
+        if choice in self.BINARY_OPERATIONS_SCREEN_TILES:
+                operation = self.BINARY_OPERATIONS_SCREEN_TILES[choice]
+                self.perform_binary_operation(operation)
+        else:
+                input("Invalid choice. Please enter a number between 1 and 6.")
+
+    def perform_binary_operation(self, operation):
+        binary_num1 = input("Enter the first binary number: ")
+        binary_num2 = input("Enter the second binary number: ")
+
+        result = operation.perform(binary_num1, binary_num2)
+        print(f"{operation.get_name()} result: {result}")
+        input("Press Enter to continue...")
+        
         # TODO work on this part
         self.main_menu()
         
@@ -114,7 +143,7 @@ class Interface:
         
         self.number_system_conversion_menu()
         
-    def not_available_screen(self):
+    '''def not_available_screen(self):
         self.clear_screen()
         
         print(self.APP_TITLE, '\n')
@@ -130,7 +159,7 @@ class Interface:
         print(text_display)
         input('')
         
-        self.main_menu()
+        self.main_menu()'''
     
     def exit_screen(self):
         self.clear_screen()

@@ -8,7 +8,7 @@ class BinaryAddition:
         result = ''
         carry = 0
         
-        for i in range(max_len - 1, -1, -1):
+        for i in range(max_len -1, -1, -1):
             bit_sum = int(binary_num1[i]) + int(binary_num2[i]) + carry
             carry = bit_sum // 2
             result = str(bit_sum % 2) + result

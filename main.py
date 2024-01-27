@@ -21,7 +21,7 @@ class Interface:
             '5': 'Negative',
         }
         self.BINARY_OPERATIONS_SCREEN_TILES = {
-            '1': BinaryDivision(),
+            #'1': BinaryDivision(),
             #'2': BinaryMultiplication(),
             #'3': BinarySubtraction(),
             '4': BinaryAddition(),

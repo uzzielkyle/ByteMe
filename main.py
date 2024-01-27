@@ -24,7 +24,7 @@ class Interface:
             '1': BinaryDivision(),
             #'2': BinaryMultiplication(),
             #'3': BinarySubtraction(),
-            #'4': BinaryAddition(),
+            '4': BinaryAddition(),
             #'5': BinaryNegative(),
         }
         self.NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES = {
@@ -97,7 +97,7 @@ class Interface:
         input("Press Enter to continue...")
         
         # TODO work on this part
-        self.main_menu()
+        self.binary_operations_menu()
         
     def number_system_conversion_menu(self):
         self.clear_screen()

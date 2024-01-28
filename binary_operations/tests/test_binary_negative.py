@@ -34,10 +34,24 @@ class TestBinaryNegative(unittest.TestCase):
         
         self.assertEquals(result, expected_output)
         
+    def test_two_bytes_with_fraction(self):
+        data = '1001.0010'
+        result = BinaryNegative().perform(binary=data)
+        expected_output = '0110.1110'
+        
+        self.assertEquals(result, expected_output)
+        
     def test_three_bytes_incomplete(self):
         data = '0 1101 1000'
         result = BinaryNegative().perform(binary=data)
         expected_output = '1111 0010 1000'
+        
+        self.assertEquals(result, expected_output)
+        
+    def test_three_bytes_incomplete_with_fractions(self):
+        data = '1101.1000 1000'
+        result = BinaryNegative().perform(binary=data)
+        expected_output = '0010.0111 1000'
         
         self.assertEquals(result, expected_output)
     

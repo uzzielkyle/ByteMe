@@ -22,11 +22,18 @@ class BinaryNegative:
             binary_whole_length = len(binary[0])
             binary_fraction_length = len(binary[1])
             
-            binary_whole_padding_amount = binary_whole_length % 4
-            binary_whole_length += binary_whole_padding_amount
+            binary_whole_padding_amount = 0
+            binary_fraction_padding_amount = 0
             
-            binary_fraction_padding_amount = binary_fraction_length % 4
-            point_position += binary_fraction_padding_amount
+            while (binary_whole_length % 4) != 0:
+                binary_whole_padding_amount += 1
+                binary_whole_length += 1
+            
+            point_position += binary_whole_padding_amount
+                        
+            while (binary_fraction_length % 4) != 0:
+                binary_fraction_padding_amount += 1
+                binary_fraction_length += 1
                 
             binary[0] = binary[0].zfill(binary_whole_length)
             binary[1] = binary[1] + ('0' * binary_fraction_padding_amount)
@@ -36,7 +43,9 @@ class BinaryNegative:
             
         else:
             binary_length = len(binary[0])
-            binary_length += binary_length % 4
+            
+            while (binary_length % 4) != 0:
+                binary_length += 1
                 
             binary = binary[0].zfill(binary_length)
 

@@ -6,16 +6,10 @@ class BinaryNegative:
 
     def perform(self, binary: str) -> str:
         binary = binary.replace(' ', '') # remove spaces
-        
-        # check if it has fraction
-        point_position: int | None = None
-        try:
-            point_position = binary.index('.') + 1
-        except:
-            pass
             
-        # removing decimal point
+        # removing decimal point if there is
         binary = binary.split('.')
+        point_position: int | None = None
         
         # padding with zeros
         if len(binary) == 2:
@@ -29,13 +23,18 @@ class BinaryNegative:
                 binary_whole_padding_amount += 1
                 binary_whole_length += 1
             
-            point_position += binary_whole_padding_amount
+            point_position = binary_whole_length // 4  # places decimal point after all whole bytes
                         
             while (binary_fraction_length % 4) != 0:
                 binary_fraction_padding_amount += 1
                 binary_fraction_length += 1
+              
+            if (binary_whole_length-binary_fraction_padding_amount % 4) != 0:  
+                if binary[0][0] == '0':   
+                    binary[0] = binary[0].zfill(binary_whole_length)
+                else:
+                    binary[0] = ('1' * binary_whole_padding_amount) + binary[0]
                 
-            binary[0] = binary[0].zfill(binary_whole_length)
             binary[1] = binary[1] + ('0' * binary_fraction_padding_amount)
             
             binary = f'{binary[0]}{binary[1]}'
@@ -56,33 +55,42 @@ class BinaryNegative:
         for idx in range(binary_length - 1, -1, -1):
             bit: str = binary[idx]
             if not flip:
-                if (idx % 4) == 0:
-                    result = f' {bit}{result}' # To separate by bytes
-                else:
-                    result = f'{bit}{result}'
+                result = f'{bit}{result}'
                 
                 if bit == '1':
                     flip = True 
     
                 continue
             
-            if (idx % 4) == 0:
-                result = f' {self.inversion[bit]}{result}' # To separate by bytes
-                continue
-            
             result = f'{self.inversion[bit]}{result}'
-        
+                    
         # inserting decimal point
         if point_position:
-            result_whole = result[:point_position].strip()
-            result_fraction = result[point_position:].strip()
+            result = [(result[idx:idx+4]) for idx in range(0, len(result), 4)]
+            
+            result_whole = ''.join(result[:point_position])
+            result_whole = self.format(result_whole)
+            
+            result_fraction = ''.join(result[point_position:])
+            result_fraction = self.format(result_fraction)            
             
             result = f'{result_whole}.{result_fraction}'
-        
-        result = result.strip() # to remove leading space(s)
-        
+            
+        else:
+            result = self.format(result)        
+            
         return result
     
+    @staticmethod
+    def format(binary):
+        result = ''
+        for idx in range(0, len(binary), 4):
+            result += f'{binary[idx: idx+4]} '
+        
+        result = result.strip()
+        
+        return result
+        
     @staticmethod
     def get_name():
         return "Negative (Two's Complement)"

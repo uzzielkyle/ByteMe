@@ -5,12 +5,6 @@ class FromHex:
     ALPHABET = \
     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     BASE = 16
-
-    def encode(self, n: int) -> str:
-        try:
-            return self.ALPHABET[n]
-        except IndexError:
-            raise Exception("\ncannot encode: %s" % n)
     
     def decode(self, s: str) -> int:
         try:
@@ -29,6 +23,14 @@ class FromHex:
         return FromDecimal().to_octal(decimal)  
           
     def to_decimal(self, hex: str = '') -> str:
+        if '.' in hex:
+            whole_hex, part_hex = hex.split('.')
+            return \
+                f'{self.to_decimal_whole(whole_hex)}.{self.to_decimal_part(part_hex)}'
+        
+        return self.to_decimal_whole(hex)
+        
+    def to_decimal_whole(self, hex: str = '') -> str:
         power = len(hex) - 1
         decimal = 0
         index = 0
@@ -39,6 +41,18 @@ class FromHex:
             index += 1
             
         return str(decimal)
+    
+    def to_decimal_part(self, hex: str = '') -> str:
+        power = -1
+        decimal = 0
+        index = 0
+        
+        while index < len(hex):
+            decimal += self.decode(hex[index]) * (self.BASE ** power)
+            power -= 1
+            index += 1
+            
+        return str(decimal).strip('0.')
                
     def to_hex(self, hex: str = '') -> str:
         return hex

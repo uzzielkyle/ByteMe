@@ -1,0 +1,78 @@
+class BinaryFormat:
+    def perform(self, binary: str) -> str:
+        binary = binary.replace(' ', '')  # remove spaces
+        binary, point_position = self.add_paddings(binary)
+        
+        if point_position:
+            binary = self.insert_point(binary, point_position)
+        else:
+            binary = self.group_by_bytes(binary)
+            
+        return binary
+        
+    @staticmethod
+    def add_paddings(binary: str) -> str:
+        binary = binary.split('.')
+        has_fraction = len(binary) == 2
+        
+        if has_fraction:
+            left, right = binary
+        else:
+            left = binary[0]
+            right = None
+            
+        point_position: int | None = None
+        
+        left_length = len(left)
+        left_padding_amount = 0
+        
+        while (left_length % 4) != 0:
+            left_padding_amount += 1
+            left_length += 1
+            
+        if (left_length - left_padding_amount % 4) != 0:
+            if left_length > 4 and left[0] == '1':
+                left = ('1' * left_padding_amount) + left
+            else:
+                left = left.zfill(left_length)
+        
+        if has_fraction:    
+            point_position = left_length // 4  # determines where to put fixed point later
+            
+            right_length = len(right)
+            right_padding_amount = 0
+                        
+            while (right_length % 4) != 0:
+                right_padding_amount += 1
+                right_length += 1
+                
+            right = right + ('0' * right_padding_amount)
+            
+            binary = f'{left}{right}'
+        else:
+            binary = left
+            
+        return binary, point_position
+    
+    def insert_point(self, binary: str, point_position: int) -> str:
+        result = [(binary[idx:idx+4]) for idx in range(0, len(binary), 4)]
+            
+        result_whole = ''.join(result[:point_position])
+        result_whole = self.group_by_bytes(result_whole)
+        
+        result_fraction = ''.join(result[point_position:])
+        result_fraction = self.group_by_bytes(result_fraction)            
+        
+        result = f'{result_whole}.{result_fraction}'
+        
+        return result
+    
+    @staticmethod
+    def group_by_bytes(binary: str) -> str:
+        result = ''
+        for idx in range(0, len(binary), 4):
+            result += f'{binary[idx: idx+4]} '
+        
+        result = result.strip()
+        
+        return result

@@ -3,7 +3,7 @@ class BinaryFormat:
         binary = binary.replace(' ', '')  # remove spaces
         binary, point_position = self.add_paddings(binary)
         
-        if point_position:
+        if isinstance(point_position, int):
             binary = self.insert_point(binary, point_position)
         else:
             binary = self.group_by_bytes(binary)
@@ -12,32 +12,43 @@ class BinaryFormat:
         
     @staticmethod
     def add_paddings(binary: str) -> str:
+        is_fraction_only: bool = True if '.' in binary and binary[0] == '.' \
+            else False
         binary = binary.split('.')
-        has_fraction = len(binary) == 2
+        has_fraction: bool = (len(binary) == 2) \
+            and binary[1] != ''
+        
+        left: str | None = None
+        right: str | None = None
         
         if has_fraction:
             left, right = binary
+        elif is_fraction_only:
+            right = binary[0]
         else:
             left = binary[0]
-            right = None
             
         point_position: int | None = None
         
-        left_length = len(left)
-        left_padding_amount = 0
-        
-        while (left_length % 4) != 0:
-            left_padding_amount += 1
-            left_length += 1
+        if left:
+            left_length = len(left)
+            left_padding_amount = 0
             
-        if (left_length - left_padding_amount % 4) != 0:
-            if left_length > 4 and left[0] == '1':
-                left = ('1' * left_padding_amount) + left
-            else:
-                left = left.zfill(left_length)
-        
-        if has_fraction:    
-            point_position = left_length // 4  # determines where to put fixed point later
+            while (left_length % 4) != 0:
+                left_padding_amount += 1
+                left_length += 1
+                
+            if (left_length - left_padding_amount % 4) != 0:
+                if left_length > 4 and left[0] == '1':
+                    left = ('1' * left_padding_amount) + left
+                else:
+                    left = left.zfill(left_length)
+                    
+            # determines where to put fixed point later by number of bytes
+            if has_fraction:
+                point_position = left_length // 4  
+
+        if right:    
             
             right_length = len(right)
             right_padding_amount = 0
@@ -48,7 +59,13 @@ class BinaryFormat:
                 
             right = right + ('0' * right_padding_amount)
             
+            if is_fraction_only:
+                point_position = 0
+            
+        if has_fraction:
             binary = f'{left}{right}'
+        elif is_fraction_only:
+            binary = right
         else:
             binary = left
             

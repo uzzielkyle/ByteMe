@@ -21,7 +21,6 @@ class BinaryAddition:
     
     @staticmethod
     def add_paddings(binary: str) -> str:
-        # removing decimal point if there is
         binary = binary.split('.')
         point_position: int | None = None
 
@@ -41,7 +40,7 @@ class BinaryAddition:
                 else:
                     binary_whole = ('1' * binary_whole_padding_amount) + binary_whole
 
-            point_position = binary_whole_length // 4  # determines where to put decimal point later
+            point_position = binary_whole_length // 4  
 
             binary_fraction = binary[1]
             binary_fraction_length = len(binary_fraction)

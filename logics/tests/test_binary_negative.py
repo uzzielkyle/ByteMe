@@ -2,7 +2,7 @@ import unittest
 import sys
 sys.path.append("..") 
 
-from binary_operations.binary_negative import BinaryNegative
+from logics.binary_negative import BinaryNegative
 
 
 class TestBinaryNegative(unittest.TestCase):
@@ -59,6 +59,13 @@ class TestBinaryNegative(unittest.TestCase):
         data = '1 1001.0100'
         result = BinaryNegative().perform(binary=data)
         expected_output = '0000 0110.1100'
+        
+        self.assertEquals(result, expected_output)
+        
+    def test_ni_labots(self):
+        data = '1010    1110.0001'
+        result = BinaryNegative().perform(binary=data)
+        expected_output = '0101 0001.1111'
         
         self.assertEquals(result, expected_output)
     

@@ -2,7 +2,7 @@ import unittest
 import sys
 sys.path.append("..") 
 
-from binary_operations.binary_division import BinaryDivision
+from logics.binary_division import BinaryDivision
 
 
 class TestBinaryDivision(unittest.TestCase):

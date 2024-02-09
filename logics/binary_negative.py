@@ -1,4 +1,4 @@
-from binary_operations.binary_format import BinaryFormat
+from logics.binary_format import BinaryFormat
 
 
 class BinaryNegative:
@@ -11,11 +11,11 @@ class BinaryNegative:
     def perform(self, binary: str) -> str:
         binary = self.FORMATTER.perform(binary=binary) # add paddings
 
-        result = self.inverse(binary=binary)   
+        result = self.invert(binary=binary)   
             
         return result
     
-    def inverse(self, binary: str) -> str:        
+    def invert(self, binary: str) -> str:        
         result: str = ''
         flip: bool = False
         
@@ -39,5 +39,5 @@ class BinaryNegative:
         return result
     
     @staticmethod
-    def get_name():
-        return "Negative (Two's Complement)"
+    def get_name() -> str:
+        return "Two's Complement"

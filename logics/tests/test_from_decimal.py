@@ -2,7 +2,7 @@ import unittest
 import sys
 sys.path.append("..") 
 
-from conversions.from_decimal import FromDecimal
+from logics.from_decimal import FromDecimal
 
 
 class TestFromDecimal(unittest.TestCase):

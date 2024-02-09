@@ -2,7 +2,7 @@ import unittest
 import sys
 sys.path.append("..") 
 
-from binary_operations.binary_format import BinaryFormat
+from logics.binary_format import BinaryFormat
 
 
 class TestBinaryFormat(unittest.TestCase):

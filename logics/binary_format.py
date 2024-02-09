@@ -1,26 +1,20 @@
-class BinaryDivision:
-    @staticmethod
-    def perform(binary_num1, binary_num2):
-        try:
-            sign1 = 1 if binary_num1[0] == '0' else -1
-            sign2 = 1 if binary_num2[0] == '0' else -1
+class BinaryFormat:
+    def perform(self, binary: str) -> str:
+        if binary[-1] == '.':
+            binary = binary + '0000'
             
-            num1 = int(binary_num1, 2) * sign1
-            num2 = int(binary_num2, 2) * sign2
+        binary, point_position = self.add_paddings(binary)
+        
+        if point_position:
+            binary = self.insert_point(binary, point_position)
+        else:
+            binary = self.group_by_bytes(binary)
             
-            quotient = num1 // num2
-            
-            quotient_binary = bin(abs(quotient))[2:]
-            
-            if quotient < 0:
-                quotient_binary = '-' + quotient_binary
-                
-            return f'{quotient_binary.zfill(len(binary_num2) - 1)}'
-        except ZeroDivisionError:
-            return "error: Division by Zero."
+        return binary
         
     @staticmethod
     def add_paddings(binary: str) -> str:
+        binary = binary.replace(' ', '')  # remove spaces
         is_fraction_only: bool = True if '.' in binary and binary[0] == '.' \
             else False
         binary = binary.split('.')
@@ -102,7 +96,26 @@ class BinaryDivision:
         result = result.strip()
         
         return result
-        
+    
     @staticmethod
-    def get_name():
-        return 'Division'
+    def balance_two_binaries(binary1: str, binary2: str) -> str:
+        diff1 = len(binary2) - len(binary1)
+        diff2 = len(binary1) - len(binary2)
+        if diff1 > 0:
+            if binary1[0] == '1':
+                for bytes in range(0, diff1//4):
+                    binary1 = '1111 ' + binary1
+            else:  
+                for bytes in range(0, diff1//4):
+                    binary1 = '0000 ' + binary1
+            
+        if diff2 > 0:
+            if binary2[0] == '1':
+                for bytes in range(0, diff2//4):
+                    binary2 = '1111 ' + binary2
+            else:
+                for bytes in range(0, diff2//4):
+                    binary2 = '0000 ' + binary2
+                
+        return binary1, binary2
+        

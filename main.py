@@ -1,5 +1,4 @@
-from binary_operations import *
-from conversions import *
+from logics import *
 from os import system
 from time import sleep
 
@@ -13,17 +12,17 @@ class Interface:
             '2': self.number_system_conversion_menu, 
             '3': self.exit_screen,
         }
-        self.BINARY_OPERATIONS_TITLES = {
-            '1': 'Division',
-            '2': 'Multiplication',
-            '3': 'Subtraction',
-            '4': 'Addition',
-            '5': 'Negative (Two\'s Complement)',
+        self.BINARY_OPERATIONS_SCREEN_TITLES = {
+            '1': 'Binary Division',
+            '2': 'Binary Multiplication',
+            '3': 'Binary Subtraction',
+            '4': 'Binary Addition',
+            '5': 'Binary Two\'s Complement',
         }
         self.BINARY_OPERATIONS_SCREEN_OPTIONS = {
             '1': BinaryDivision(),
-            #'2': BinaryMultiplication(),
-            #'3': BinarySubtraction(),
+            '2': BinaryMultiplication(),
+            '3': BinarySubtraction(),
             '4': BinaryAddition(),
             '5': BinaryNegative(),
         }
@@ -82,16 +81,47 @@ class Interface:
         if choice == '6':
             self.main_menu()  # Exit the loop and return to the main menu
 
-        if choice in self.BINARY_OPERATIONS_SCREEN_OPTIONS:
-                self.perform_binary_operation_screen(choice)
-        else:
-                input("Invalid choice. Please enter a number between 1 and 6.")
+        elif choice in self.BINARY_OPERATIONS_SCREEN_OPTIONS:
+                self.perform_binary_operation_input_screen(choice)
 
-    def perform_binary_operation_screen(self, choice):
+        else:
+            input("Invalid choice. Please enter a number between 1 and 6.")
+            self.binary_operations_menu()
+
+    def perform_binary_operation_input_screen(self, choice: str):
+        self.clear_screen()
+        
+        title = self.BINARY_OPERATIONS_SCREEN_TITLES[choice]
+
+        print(self.APP_TITLE, '\n')
+        print(title, '\n\n')
+        
         binary_num1 = input("Enter the first binary number: ")
+        binary_num2 = None
         if choice != '5':
             binary_num2 = input("Enter the second binary number: ")
+            
+        try:
+            for char in binary_num1 + binary_num2:
+                if char not in ' .-01':
+                    raise
+                
+            self.perform_binary_operation_output_screen(
+                choice=choice, 
+                binary_num1=binary_num1, 
+                binary_num2=binary_num2)
+        except:
+            input('Invalid input.')
+            self.perform_binary_operation_input_screen()
+        
+    def perform_binary_operation_output_screen(self, choice: str, binary_num1: str, binary_num2: str | None):
+        self.clear_screen()
+        
+        title = self.BINARY_OPERATIONS_SCREEN_TITLES[choice]
 
+        print(self.APP_TITLE, '\n')
+        print(title, '\n\n')
+        
         operation =  self.BINARY_OPERATIONS_SCREEN_OPTIONS[choice]
         
         if choice == '5':
@@ -99,8 +129,14 @@ class Interface:
         else:
             result = operation.perform(binary_num1, binary_num2)
             
+        if binary_num2:
+            print(f'Binary1: {BinaryFormat().perform(binary_num1)}')
+            print(f'Binary2: {BinaryFormat().perform(binary_num2)}')
+        else:
+            print(f'Binary: {BinaryFormat().perform(binary=binary_num1)}')
+            
         print(f"{operation.get_name()} result: {result}")
-        input("Press Enter to continue...")
+        input("\n\nPress Enter to continue...")
         
         self.binary_operations_menu()
         
@@ -122,29 +158,39 @@ class Interface:
         choice = input('Enter desired option number: ').strip()
         
         if choice in self.NUMBER_SYSTEM_CONVERSION_OPTIONS:
-            self.number_system_conversion_screen(base=choice)
+            self.number_system_conversion_input_screen(base=choice)
         elif choice == '5':
             self.main_menu()
         else:
             input('Invalid input...')
             self.number_system_conversion_menu()
             
-    def number_system_conversion_screen(self, base: str):
+    def number_system_conversion_input_screen(self, base: str):
         self.clear_screen()
         
         title = self.NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES[base]
-        conversion = self.NUMBER_SYSTEM_CONVERSION_OPTIONS[base]
         
         print(self.APP_TITLE, '\n')
         print(title, '\n\n')
         number = input('Enter number to convert: ').strip()
         
-        print('\n\nOUTPUT\n')
+        self.number_system_conversion_output_screen(base=base, number=number)
+        
+    def number_system_conversion_output_screen(self, base: str, number: str):
+        self.clear_screen()
+        
+        title = self.NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES[base]
+        
+        print(self.APP_TITLE, '\n')
+        print(title, '\n\n')
+        
+        conversion = self.NUMBER_SYSTEM_CONVERSION_OPTIONS[base]
+
         print(f'Binary: {conversion.to_binary(number)}')
         print(f'Decimal: {conversion.to_decimal(number)}')
         print(f'Octal: {conversion.to_octal(number)}')
         print(f'Hex: {conversion.to_hex(number)}')
-        input('...')
+        input("\n\nPress Enter to continue...")
         
         self.number_system_conversion_menu()
         

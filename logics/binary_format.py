@@ -2,6 +2,10 @@ class BinaryFormat:
     def perform(self, binary: str) -> str:
         if binary[-1] == '.':
             binary = binary + '0000'
+        
+        if binary[0] == '.':
+            binary = '0000' + binary
+
             
         binary, point_position = self.add_paddings(binary)
         

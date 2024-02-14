@@ -9,5 +9,5 @@ class BinarySubtraction:
         return result
     
     @staticmethod
-    def get_name():
+    def get_name() -> str:
         return 'Subtraction'

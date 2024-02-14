@@ -62,9 +62,20 @@ class FromHex:
                        
     def to_hex(self, hex: str = '') -> str:
         try:
+            is_negative = '-' in hex
+            
             for char in hex:
                 if char not in '-.0123456789ABCDEF':
-                    raise
+                    raise   
+            
+            if is_negative:
+                if hex[1] == '.':
+                    negative_sign, hex_fraction = hex.split('.')
+                    hex = f'{negative_sign}0.{hex_fraction}'
+                
+            if hex[0] == '.':
+                hex = f'0{hex}'
+                
             return hex
         except:
             return 'not a hex'

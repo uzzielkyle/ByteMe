@@ -25,12 +25,12 @@ class FromBinary:
         return self.FORMATTER.perform(binary)
         
     def to_octal(self, binary: str = '') -> str:
+        binary = self.FORMATTER.perform(binary)
         binary_is_negative = binary[0] == '1'
+        
         if binary_is_negative:
             binary = BinaryNegative().perform(binary) # two's complement
-        else:
-            binary = self.FORMATTER.perform(binary)
-            
+
         binary = binary.replace(' ', '') # removes spaces
             
         point_idx = binary.index('.') if '.' in binary else None
@@ -53,11 +53,11 @@ class FromBinary:
             if len(fraction_binary) % 3 != 0:
                 fraction_binary = fraction_binary + (3 - (len(fraction_binary) % 3)) * '0'   
                     
-            for idx in range(3, len(whole_binary) + 1, 3):
-                bit_str = fraction_binary[idx - 3:idx]
+            for idx in range(0, len(whole_binary) + 1, 3):
+                bit_str = fraction_binary[idx:idx + 3]
                 octal = octal + self.to_decimal(bit_str, formatted=False, is_signed=False)  
                 
-        while octal[0] == '0':
+        while octal[0] == '0' and octal[1] == '0':
             octal = octal[1:]
             
         while octal[-1] == '0':
@@ -142,6 +142,8 @@ class FromBinary:
                 hex = hex + self.encode(dec)
                 
         while hex[0] == '0':
+            if point_idx and hex[0] == '0':
+                break 
             hex = hex[1:]
             
         while hex[-1] == '0':

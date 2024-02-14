@@ -54,9 +54,19 @@ class FromDecimal:
 
     def to_decimal(self, decimal: int | str = 0) -> str:
         try:
+            is_negative = '-' in decimal
             for char in decimal:
-                if char not in '.0123456789':
+                if char not in '-.0123456789':
                     raise
+            
+            if is_negative:
+                if decimal[1] == '.':
+                    negative_sign, decimal_fraction = decimal.split('.')
+                    decimal = f'{negative_sign}0.{decimal_fraction}'
+                
+            if decimal[0] == '.':
+                decimal = f'0{decimal}'
+                
             return decimal
         except:
             return 'not a decimal'
@@ -81,13 +91,16 @@ class FromDecimal:
         return hex
 
     def whole_conversion(self, decimal: str, base: int) -> str:
-        if isinstance(decimal, str):
-                decimal = int(decimal)
+        try:
+            if isinstance(decimal, str):
+                    decimal = int(decimal)
 
-        if decimal < base:
-            return self.encode(decimal)
-        else:
-            return self.whole_conversion(decimal // base, base) + self.encode(decimal % base)
+            if decimal < base:
+                return self.encode(decimal)
+            else:
+                return self.whole_conversion(decimal // base, base) + self.encode(decimal % base)
+        except:
+            return '0'
         
     def fraction_conversion(self, decimal: str, base: int) -> str:
         decimal = float(f'0.{decimal}')

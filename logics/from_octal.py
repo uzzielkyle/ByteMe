@@ -19,9 +19,18 @@ class FromOctal:
         
     def to_octal(self, octal: str = '') -> str:
         try:
+            is_negative = '-' in octal
             for char in octal:
-                if char not in '-.012345678':
+                if char not in '-.01234567':
                     raise
+            
+            if is_negative:
+                if octal[1] == '.':
+                    negative_sign, octal_fraction = octal.split('.')
+                    octal = f'{negative_sign}0.{octal_fraction}'
+                
+            if octal[0] == '.':
+                octal = f'0{octal}'
             return octal
         except:
             return 'not an octal'

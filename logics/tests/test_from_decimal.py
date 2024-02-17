@@ -9,7 +9,7 @@ class TestFromDecimal(unittest.TestCase):
     def test_from_decimal_to_binary(self):
         data = '10'
         result = FromDecimal().to_binary(data)
-        expected_output = '1010'
+        expected_output = '0000 1010'
         
         self.assertEqual(result, expected_output)
         
@@ -39,7 +39,7 @@ class TestFromDecimalFraction(unittest.TestCase):
     def test_from_decimal_to_binary_fraction(self):
         data = '10.5'
         result = FromDecimal().to_binary(data)
-        expected_output = '1010.1'
+        expected_output = '0000 1010.1000'
         
         self.assertEqual(result, expected_output)
     

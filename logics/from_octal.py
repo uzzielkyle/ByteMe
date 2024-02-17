@@ -1,11 +1,18 @@
-from logics.from_decimal import FromDecimal
+from logics.from_binary import FromBinary
+from logics.binary_format import BinaryFormat
 
 
 class FromOctal:
     ALPHABET = \
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "01234567"
     BASE = 8
     
+    def encode(self, n: int) -> str:
+        try:
+            return self.ALPHABET[n]
+        except IndexError:
+            raise Exception("\ncannot encode: %s" % n)
+        
     def decode(self, s: str) -> int:
         try:
             return self.ALPHABET.index(s)
@@ -13,68 +20,52 @@ class FromOctal:
             raise Exception ("cannot decode: %s" % s)
 
     def to_binary(self, octal: str = '') -> str:
-        decimal = self.to_decimal(octal)
+        def convert_to_decimal(decimal: str) -> str:
+            result = ''
+            
+            while decimal > 2:
+                result += self.encode(decimal % 2)
+                decimal = decimal // 2
+            
+            result += self.encode(decimal % 2)
+            
+            result = result[::-1].zfill(3)
+            
+            return result
+            
+        binary = ''
         
-        return FromDecimal().to_binary(decimal)
+        for char in octal:
+            if char == '.':
+                binary += char
+                continue
+            
+            binary += convert_to_decimal(self.decode(char))
+            
+        binary = BinaryFormat().perform(binary)
+        
+        return binary
         
     def to_octal(self, octal: str = '') -> str:
         try:
-            is_negative = '-' in octal
             for char in octal:
-                if char not in '-.01234567':
+                if char not in '.01234567':
                     raise
-            
-            if is_negative:
-                if octal[1] == '.':
-                    negative_sign, octal_fraction = octal.split('.')
-                    octal = f'{negative_sign}0.{octal_fraction}'
                 
             if octal[0] == '.':
                 octal = f'0{octal}'
+                
             return octal
         except:
             return 'not an octal'
         
     def to_decimal(self, octal: str = '') -> str:
-        def convert(octal: str, is_whole: bool = True) -> str:
-            power = len(octal) - 1 if is_whole \
-                else -1
-            decimal = 0
-            index = 0
-            
-            while index < len(octal):
-                decimal += self.decode(octal[index]) * (self.BASE ** power)
-                power -= 1
-                index += 1
-            
-            decimal = str(decimal)
-            
-            if decimal.startswith('0.'):
-                decimal = decimal[2:]
-                
-            return decimal
-           
-        is_negative = '-' in octal
+        binary = self.to_binary(octal)
         
-        if is_negative:
-            octal = octal.replace('-', '')
-        
-        if '.' in octal:
-            whole_octal, part_octal = octal.split('.')
-            if is_negative:
-                return \
-                    f'-{convert(whole_octal)}.{convert(part_octal, False)}'
-            else:
-                return \
-                    f'{convert(whole_octal)}.{convert(part_octal, False)}'
-        
-        if is_negative:
-            return '-' + convert(octal)
-        else:
-            return convert(octal)
+        return FromBinary().to_decimal(binary)
                
     def to_hex(self, octal: str = '') -> str:
-        decimal = self.to_decimal(octal)
-        
-        return FromDecimal().to_hex(decimal)
+        binary = self.to_binary(octal)
+
+        return FromBinary().to_hex(binary)
     

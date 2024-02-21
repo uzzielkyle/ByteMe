@@ -46,7 +46,7 @@ class BinaryFormat:
                 left_length += 1
                 
             if (left_length - left_padding_amount % 4) != 0:
-                if left_length > 4 and left[0] == '1':
+                if left[0] == '1':
                     left = ('1' * left_padding_amount) + left
                 else:
                     left = left.zfill(left_length)

@@ -1,241 +1,236 @@
+from customtkinter import *
+#from PIL import Image
 from logics import *
-from os import system
-from time import sleep
 
 
-class Interface:
-    APP_TITLE = 'ByteMe'
+class Interface(CTk):
+    BINARY_OPERATIONS_SCREEN_TITLES = {
+        '1': "Division",
+        '2': "Multiplication",
+        '3': "Subtraction",
+        '4': "Addition",
+        '5': "Negative (Two's Complement)",
+    }
+    BINARY_OPERATIONS_SCREEN_OPTIONS = {
+        '1': BinaryDivision(),
+        '2': BinaryMultiplication(),
+        '3': BinarySubtraction(),
+        '4': BinaryAddition(),
+        '5': BinaryNegative(),
+    }
+    NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES = {
+        '1': "Binary to X",
+        '2': "Decimal to X",
+        '3': "Octal to X",
+        '4': "Hex to X",
+    }
+    NUMBER_SYSTEM_CONVERSION_OPTIONS = {
+        '1': FromBinary(),
+        '2': FromDecimal(),
+        '3': FromOctal(),
+        '4': FromHex(),
+    }
     
-    def __init__(self) -> None:
-        self.MAIN_MENU_OPTIONS = {
-            '1': self.binary_operations_menu, 
-            '2': self.number_system_conversion_menu, 
-            '3': self.exit_screen,
-        }
-        self.BINARY_OPERATIONS_SCREEN_TITLES = {
-            '1': 'Binary Division',
-            '2': 'Binary Multiplication',
-            '3': 'Binary Subtraction',
-            '4': 'Binary Addition',
-            '5': 'Binary Two\'s Complement',
-        }
-        self.BINARY_OPERATIONS_SCREEN_OPTIONS = {
-            '1': BinaryDivision(),
-            '2': BinaryMultiplication(),
-            '3': BinarySubtraction(),
-            '4': BinaryAddition(),
-            '5': BinaryNegative(),
-        }
-        self.NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES = {
-            '1': 'Binary to X',
-            '2': 'Decimal to X',
-            '3': 'Octal to X',
-            '4': 'Hex to X',
-        }
-        self.NUMBER_SYSTEM_CONVERSION_OPTIONS = {
-            '1': FromBinary(),
-            '2': FromDecimal(),
-            '3': FromOctal(),
-            '4': FromHex(),
-        }
     
-    def main_menu(self):
+    def __init__(self):
+        super().__init__()
+        self.title('ByteMe')
+        self.geometry('500x300+300+200')
+        self.resizable(width=False, height=False)
+    
+        self.main_menu()
+
+    #1st Screen Display the Main Menu
+    def main_menu(self): 
         self.clear_screen()
+
+        menu_label = CTkLabel(self, text="Main Menu", font=('Helvetica', 20, "bold"))
+        menu_label.pack(padx=10, pady=10)
+
+        binary_button = CTkButton(self, text="Binary Operations", command=self.binary_operations_menu)
+        binary_button.pack(padx=5, pady=5)
+
+        conversion_button = CTkButton(self, text="Number System Conversion", command=self.number_system_conversion_menu)
+        conversion_button.pack(pady=5)
+
+        exit_button = CTkButton(self, text="Exit", command=self.exit_screen)
+        exit_button.pack(pady=5)
         
-        menu_display = """%s
-        
-        Menu-1 (Main Menu)
-        
-        [1] Binary Operations
-        [2] Number System Conversion
-        [3] Exit
-        """ % (self.APP_TITLE)
-        
-        print(menu_display)
-        choice = input('Enter desired option number: ').strip()
-        
-        try:
-            self.MAIN_MENU_OPTIONS[choice]()
-        except KeyError:
-            input('Invalid input...')
-            self.main_menu()
-        
-    def binary_operations_menu(self):
+
+    #2nd Screen Display the Binary Operations Menu
+    def binary_operations_menu(self): 
         self.clear_screen()
-        
-        menu_display = """%s
-        
-        Menu-2 (Binary Operations)
-        
-        [1] Division
-        [2] Multiplication
-        [3] Subtraction
-        [4] Addition
-        [5] Negative (Two's Complement)
-        [6] Main Menu
-        """ % (self.APP_TITLE)
-        
-        print(menu_display)
-        choice = input('Enter desired option number: ')
-        
-        if choice == '6':
-            self.main_menu()  # Exit the loop and return to the main menu
 
-        elif choice in self.BINARY_OPERATIONS_SCREEN_OPTIONS:
-                self.perform_binary_operation_input_screen(choice)
+        menu_label = CTkLabel(self, text="Binary Operations Menu", font=('Helvetica', 20, "bold"))
+        menu_label.pack(pady=10)
 
-        else:
-            input("Invalid choice. Please enter a number between 1 and 6.")
-            self.binary_operations_menu()
+        division_button = CTkButton(self, text="Division",
+            command=lambda: self.perform_binary_operation_input_screen('1'))
+        division_button.pack(padx=5, pady=5)
 
-    def perform_binary_operation_input_screen(self, choice: str):
+        multiplication_button = CTkButton(self, text="Multiplication",
+            command=lambda: self.perform_binary_operation_input_screen('2'))
+        multiplication_button.pack(padx=5, pady=5)
+
+        subtraction_button = CTkButton(self, text="Subtraction",
+            command=lambda: self.perform_binary_operation_input_screen('3'))
+        subtraction_button.pack(padx=5, pady=5)
+
+        addition_button = CTkButton(self, text="Addition", 
+            command=lambda: self.perform_binary_operation_input_screen('4'))
+        addition_button.pack(padx=5, pady=5)
+
+        twos_complement_button = CTkButton(self, text="Negative (Two's Complement)", 
+            command=lambda: self.perform_binary_operation_input_screen('5'))
+        twos_complement_button.pack(padx=5, pady=5)
+
+        back_button = CTkButton(self, text="Back to Main Menu", command=self.main_menu)
+        back_button.pack(padx=5, pady=5)
+        
+
+    #Display the Input Screen of Binary Operation
+    def perform_binary_operation_input_screen(self, choice): 
         self.clear_screen()
-        
-        title = self.BINARY_OPERATIONS_SCREEN_TITLES[choice]
 
-        print(self.APP_TITLE, '\n')
-        print(title, '\n\n')
-        
-        binary_num1 = input("Enter the first binary number: ")
-        binary_num2 = None
+        title = Interface.BINARY_OPERATIONS_SCREEN_TITLES[choice]
+
+        menu_label = CTkLabel(self, text=title, font=('Helvetica', 20, "bold"))
+        menu_label.pack(padx=10, pady=10)
+
+        binary_num1_label = CTkLabel(self, text="Enter the first binary number:")
+        binary_num1_label.pack()
+        binary_num1_entry = CTkEntry(self)
+        binary_num1_entry.pack()
+
         if choice != '5':
-            binary_num2 = input("Enter the second binary number: ")
-            
-        try:
-            for char in binary_num1 + binary_num2:
-                if char not in ' .-01':
-                    raise
-                
-            self.perform_binary_operation_output_screen(
-                choice=choice, 
-                binary_num1=binary_num1, 
-                binary_num2=binary_num2)
-        except:
-            input('Invalid input.')
-            self.perform_binary_operation_input_screen()
-        
-    def perform_binary_operation_output_screen(self, choice: str, binary_num1: str, binary_num2: str | None):
-        self.clear_screen()
-        
-        title = self.BINARY_OPERATIONS_SCREEN_TITLES[choice]
+            binary_num2_label = CTkLabel(self, text="Enter the second binary number:")
+            binary_num2_label.pack()
+            binary_num2_entry = CTkEntry(self)
+            binary_num2_entry.pack()
 
-        print(self.APP_TITLE, '\n')
-        print(title, '\n\n')
+        #Button to perform the operation
+        perform_button = CTkButton(self, text="Perform Operation", 
+            command=lambda: 
+                self.perform_binary_operation_output_screen(choice, binary_num1_entry.get(), binary_num2_entry.get() if choice != '5' else self.main_menu))
+        perform_button.pack(pady=10)
         
-        operation =  self.BINARY_OPERATIONS_SCREEN_OPTIONS[choice]
-        
+
+    #Display the Output Screen of Binary Operation
+    def perform_binary_operation_output_screen(self, choice, binary_num1, binary_num2): 
+        self.clear_screen()
+
+        title = Interface.BINARY_OPERATIONS_SCREEN_TITLES[choice]
+
+        menu_label = CTkLabel(self, text=title, font=('Helvetica', 20, "bold"))
+        menu_label.pack(pady=10)
+
+        operation = Interface.BINARY_OPERATIONS_SCREEN_OPTIONS[choice]
+
+        result = ''
         if choice == '5':
             result = operation.perform(binary_num1)
         else:
             result = operation.perform(binary_num1, binary_num2)
             
-        if binary_num2:
+        if choice != '5' and binary_num2 != '':
             print(f'Binary1: {BinaryFormat().perform(binary_num1)}')
             print(f'Binary2: {BinaryFormat().perform(binary_num2)}')
-        else:
+        elif choice != '5':
             print(f'Binary: {BinaryFormat().perform(binary=binary_num1)}')
-            
-        print(f"{operation.get_name()} result: {result}")
-        input("\n\nPress Enter to continue...")
-        
-        self.binary_operations_menu()
-        
-    def number_system_conversion_menu(self):
+
+        #Create Labels to display the results
+        result_label = CTkLabel(self, text=f"{operation.get_name()} result: {result}")
+        result_label.pack(pady=10)
+
+        # Button to return to the conversion menu
+        back_button = CTkButton(self, text="Back to Binary Operations Menu", command=self.binary_operations_menu)
+        back_button.pack(pady=5)
+
+
+    #3rd Screen Display the Number Conversion System 
+    def number_system_conversion_menu(self): 
         self.clear_screen()
-        
-        menu_display = """%s
-        
-        Menu-3 (Conversion)
-        
-        [1] Binary to X
-        [2] Decimal to X
-        [3] Octal to X
-        [4] Hexa to X
-        [5] Main Menu
-        """ % (self.APP_TITLE)
-        
-        print(menu_display)
-        choice = input('Enter desired option number: ').strip()
-        
-        if choice in self.NUMBER_SYSTEM_CONVERSION_OPTIONS:
-            self.number_system_conversion_input_screen(base=choice)
-        elif choice == '5':
-            self.main_menu()
-        else:
-            input('Invalid input...')
-            self.number_system_conversion_menu()
-            
-    def number_system_conversion_input_screen(self, base: str):
+
+        menu_label = CTkLabel(self, text="Number System Conversion Menu", font=('Helvetica', 20, "bold"))
+        menu_label.pack(pady=10)
+
+        binary_to_x_button = CTkButton(self, text="Binary to X", 
+            command=lambda: self.number_system_conversion_input_screen('1'))
+        binary_to_x_button.pack(padx=5, pady=5)
+
+        decimal_to_x_button = CTkButton(self, text="Decimal to X", 
+            command=lambda: self.number_system_conversion_input_screen('2'))
+        decimal_to_x_button.pack(padx=5, pady=5)
+
+        octal_to_x_button = CTkButton(self, text="Octal to X", 
+            command=lambda: self.number_system_conversion_input_screen('3'))
+        octal_to_x_button.pack(padx=5, pady=5)
+
+        hex_to_x_button = CTkButton(self, text="Hex to X", 
+            command=lambda: self.number_system_conversion_input_screen('4'))
+        hex_to_x_button.pack(padx=5, pady=5)
+
+        back_button = CTkButton(self, text="Back to Main Menu", command=self.main_menu)
+        back_button.pack(padx=5, pady=5)
+
+    def number_system_conversion_input_screen(self, base):
         self.clear_screen()
-        
-        title = self.NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES[base]
-        
-        print(self.APP_TITLE, '\n')
-        print(title, '\n\n')
-        number = input('Enter number to convert: ').strip()
-        
-        self.number_system_conversion_output_screen(base=base, number=number)
-        
+
+        title = Interface.NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES[base]
+
+        menu_label = CTkLabel(self, text=title, font=('Helvetica', 20, "bold"))
+        menu_label.pack(pady=10)
+
+        number_label = CTkLabel(self, text="Enter number to convert:")
+        number_label.pack(pady=5)
+
+        number_entry = CTkEntry(self)
+        number_entry.pack(pady=5)
+
+        perform_button = CTkButton(self, text="Convert", 
+            command=lambda: self.number_system_conversion_output_screen(base, number_entry.get()))
+        perform_button.pack(pady=5)
+
     def number_system_conversion_output_screen(self, base: str, number: str):
         self.clear_screen()
-        
+
         title = self.NUMBER_SYSTEM_CONVERSION_SCREEN_TITLES[base]
-        
-        print(self.APP_TITLE, '\n')
-        print(title, '\n\n')
-        
+
+        menu_label = CTkLabel(self, text=title, font=('Helvetica', 20, "bold"))
+        menu_label.pack(pady=10)
+
         conversion = self.NUMBER_SYSTEM_CONVERSION_OPTIONS[base]
 
-        print(f'Binary: {conversion.to_binary(number)}')
-        print(f'Decimal: {conversion.to_decimal(number)}')
-        print(f'Octal: {conversion.to_octal(number)}')
-        print(f'Hex: {conversion.to_hex(number)}')
-        input("\n\nPress Enter to continue...")
+        binary_result = conversion.to_binary(number)
+        decimal_result = conversion.to_decimal(number)
+        octal_result = conversion.to_octal(number)
+        hex_result = conversion.to_hex(number)
+
+        # Create Labels to display the results
+        binary_label = CTkLabel(self, text=f'Binary: {binary_result}')
+        binary_label.pack()
         
-        self.number_system_conversion_menu()
+        decimal_label = CTkLabel(self, text=f'Decimal: {decimal_result}')
+        decimal_label.pack()
         
-    def not_available_screen(self):
-        self.clear_screen()
+        octal_label = CTkLabel(self, text=f'Octal: {octal_result}')
+        octal_label.pack()
         
-        print(self.APP_TITLE, '\n')
-        
-        text_display = """
-        
-        This menu is still not available.
-        
-        \t - %s
-        
-        """ % (self.APP_TITLE)
-        
-        print(text_display)
-        input('')
-        
-        self.main_menu()
-    
+        hex_label = CTkLabel(self, text=f'Hex: {hex_result}')
+        hex_label.pack()
+
+        # Button to return to the conversion menu
+        back_button = CTkButton(self, text="Back to Conversion Menu", command=self.number_system_conversion_menu)
+        back_button.pack(pady=5)
+
     def exit_screen(self):
-        self.clear_screen()
-        
-        text_display = """
-        
-        THANK YOU FOR USING ME!
-        
-        \t - %s
-        
-        """ % (self.APP_TITLE)
-        
-        print(text_display)
-        sleep(1)
-        exit()
-        
-    @staticmethod
-    def clear_screen():
-        system('cls')
-        
-        
+        if CTk.messagebox("Quit", "Do you want to quit?"):
+            self.destroy()
+
+    def clear_screen(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+            
 if __name__ == '__main__':
-    try:
-        app = Interface()
-        app.main_menu()
-    except KeyboardInterrupt:
-        print('\nSession Interrupted :<')
-    
+    app = Interface()
+    app.mainloop()

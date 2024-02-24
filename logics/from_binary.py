@@ -25,6 +25,8 @@ class FromBinary:
     def to_octal(self, binary: str = '') -> str:
         is_negative = binary.startswith('1')
         binary = self.FORMATTER.perform(binary)
+        if binary == "0000":
+            return "0"
         binary = binary.replace(' ', '')  # removes spaces
 
         point_idx = binary.index('.') if '.' in binary else None
@@ -68,6 +70,8 @@ class FromBinary:
             octal = octal[1:]
 
         while octal.endswith('0'):
+            if not point_idx:
+                break
             octal = octal[:-1]
 
         return octal
@@ -114,17 +118,17 @@ class FromBinary:
     def to_hex(self, binary: str = '') -> str:
         is_negative = binary.startswith('1')
         binary = self.FORMATTER.perform(binary)
+        if binary == "0000":
+            return "0"
         binary = binary.replace(' ', '')  # removes spaces
 
         point_idx = binary.index('.') if '.' in binary else None
         whole_binary = binary[:point_idx]
 
         if whole_binary.startswith('1'):
-            whole_binary = (4 - (len(whole_binary) % 4)) * '1' + \
-                whole_binary if (len(whole_binary) % 4) > 0 else whole_binary
+            whole_binary = (4 - (len(whole_binary) % 4)) * '1' + whole_binary
         else:
-            whole_binary = (4 - (len(whole_binary) % 4)) * '0' + \
-                whole_binary if (len(whole_binary) % 4) > 0 else whole_binary
+            whole_binary = (4 - (len(whole_binary) % 4)) * '0' + whole_binary
 
         hex = ''
 
@@ -156,6 +160,8 @@ class FromBinary:
             hex = hex[1:]
 
         while hex.endswith('0'):
+            if not point_idx:
+                break
             hex = hex[:-1]
 
         return hex

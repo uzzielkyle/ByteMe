@@ -42,13 +42,15 @@ class FromDecimal:
 
     def to_decimal(self, decimal: int | str = 0) -> str:
         try:
+            if decimal == '0':
+                return decimal
             is_negative = '-' in decimal
             for char in decimal:
                 if char not in '-.0123456789':
                     raise
 
             if is_negative:
-                if decimal[1] == '.':
+                if decimal.startswith('.'):
                     negative_sign, decimal_fraction = decimal.split('.')
                     decimal = f'{negative_sign}0.{decimal_fraction}'
 

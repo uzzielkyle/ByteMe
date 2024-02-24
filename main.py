@@ -35,8 +35,9 @@ class Interface(CTk):
     def __init__(self):
         super().__init__()
         self.title('ByteMe')
-        self.geometry('500x300+300+200')
-        self.resizable(width=False, height=False)
+        self.geometry('500x300')
+        self.minsize(320, 320)
+        # self.resizable(width=False, height=False)
         # Modes: "System" (standard), "Dark", "Light"
         set_appearance_mode("System")
         set_default_color_theme("assets/themes/carrot.json")

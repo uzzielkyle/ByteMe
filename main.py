@@ -119,7 +119,7 @@ class Interface(CTk):
         # Button to perform the operation
         perform_button = CTkButton(self, text="Perform Operation",
                                    command=lambda:
-                                   self.perform_binary_operation_output_screen(choice, binary_num1_entry.get(), binary_num2_entry.get() if choice != '5' else self.main_menu))
+                                   self.perform_binary_operation_output_screen(choice=choice, binary_num1=binary_num1_entry.get() if binary_num1_entry.get() != '' else '0', binary_num2=binary_num2_entry.get() if binary_num2_entry.get() != '' else '0' if choice != '5' else self.main_menu))
         perform_button.pack(pady=10)
 
     # Display the Output Screen of Binary Operation
@@ -203,7 +203,7 @@ class Interface(CTk):
         number_entry.pack(pady=5)
 
         perform_button = CTkButton(self, text="Convert",
-                                   command=lambda: self.number_system_conversion_output_screen(base, number_entry.get()))
+                                   command=lambda: self.number_system_conversion_output_screen(base=base, number=number_entry.get() if number_entry.get() != '' else '0'))
         perform_button.pack(pady=5)
 
     def number_system_conversion_output_screen(self, base: str, number: str):

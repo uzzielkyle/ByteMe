@@ -24,9 +24,10 @@ class FromHex:
         is_negative = hex.startswith('F')
 
         def convert_to_decimal(decimal: str) -> str:
+            decimal = int(decimal)
             result = ''
 
-            while int(decimal) > 2:
+            while decimal >= 2:
                 result += self.encode(decimal % 2)
                 decimal = decimal // 2
 
@@ -69,12 +70,8 @@ class FromHex:
                 if char not in '-.0123456789ABCDEF':
                     raise
 
-                if hex[1] == '.':
-                    negative_sign, hex_fraction = hex.split('.')
-                    hex = f'{negative_sign}0.{hex_fraction}'
-
-            if hex[0] == '.':
-                hex = f'0{hex}'
+                if hex.startswith('.'):
+                    hex = f'0{hex}'
 
             return hex
         except:

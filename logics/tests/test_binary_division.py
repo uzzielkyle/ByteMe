@@ -10,7 +10,7 @@ class TestBinaryDivision(unittest.TestCase):
         data1 = '1'
         data2 = '1'
         result = BinaryDivision().perform(binary1=data1, binary2=data2)
-        expected_output = '1'
+        expected_output = '0001.0000'
         
         self.assertEqual(result, expected_output)
 
@@ -18,7 +18,7 @@ class TestBinaryDivision(unittest.TestCase):
         data1 = '1101'
         data2 = '10'
         result = BinaryDivision().perform(binary1=data1, binary2=data2)
-        expected_output = '110'
+        expected_output = '0001.1000'
         
         self.assertEqual(result, expected_output)
         
@@ -26,7 +26,7 @@ class TestBinaryDivision(unittest.TestCase):
         data1 = '10110'
         data2 = '110'
         result = BinaryDivision().perform(binary1=data1, binary2=data2)
-        expected_output = '100'
+        expected_output = '0101.0000'
         
         self.assertEqual(result, expected_output)
         
@@ -34,7 +34,7 @@ class TestBinaryDivision(unittest.TestCase):
         data1 = '1101101'
         data2 = '101'
         result = BinaryDivision().perform(binary1=data1, binary2=data2)
-        expected_output = '10101'
+        expected_output = '0110.0101 0101'
         
         self.assertEqual(result, expected_output)
         

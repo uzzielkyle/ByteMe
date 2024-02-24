@@ -1,6 +1,4 @@
-from logics.from_decimal import FromDecimal
 from logics.binary_format import BinaryFormat
-from logics.binary_negative import BinaryNegative
 
 
 class FromBinary:
@@ -25,25 +23,22 @@ class FromBinary:
         return self.FORMATTER.perform(binary)
         
     def to_octal(self, binary: str = '') -> str:
-        binary_is_negative = binary[0] == '1'
-        if binary_is_negative:
-            binary = BinaryNegative().perform(binary) # two's complement
-        else:
-            binary = self.FORMATTER.perform(binary)
-            
+        binary = self.FORMATTER.perform(binary)
         binary = binary.replace(' ', '') # removes spaces
             
         point_idx = binary.index('.') if '.' in binary else None
         whole_binary = binary[:point_idx]
         
-        if len(whole_binary) % 3 != 0:
+        if whole_binary[0] == '1':
+            whole_binary = (3 - (len(whole_binary) % 3)) * '1' + whole_binary
+        else:
             whole_binary = (3 - (len(whole_binary) % 3)) * '0' + whole_binary
                 
         octal = ''
                 
         for idx in range(3, len(whole_binary) + 1, 3):
             bit_str = whole_binary[idx - 3:idx]
-            octal = octal + self.to_decimal(bit_str, formatted=False, is_signed=False)
+            octal = octal + str(self.to_decimal(bit_str, formatted=False, is_signed=False))
                     
         if point_idx: 
             octal = octal + '.'
@@ -52,24 +47,24 @@ class FromBinary:
             
             if len(fraction_binary) % 3 != 0:
                 fraction_binary = fraction_binary + (3 - (len(fraction_binary) % 3)) * '0'   
-                    
-            for idx in range(3, len(whole_binary) + 1, 3):
-                bit_str = fraction_binary[idx - 3:idx]
-                octal = octal + self.to_decimal(bit_str, formatted=False, is_signed=False)  
+                
+            for idx in range(0, len(whole_binary) + 1, 3):
+                bit_str = fraction_binary[idx:idx + 3]
+                octal = octal + str(self.to_decimal(bit_str, formatted=False, is_signed=False)) 
                 
         while octal[0] == '0':
+            if point_idx and octal[0] == '0' and octal[1] == '.':
+                break 
+            
             octal = octal[1:]
             
         while octal[-1] == '0':
-            octal = octal[:-2]
-        
-        if binary_is_negative:
-            return '-' + octal
-        else:
-            return octal
+            octal = octal[:-1]
+
+        return octal
         
     def to_decimal(self, binary: str = '', formatted: bool = True, is_signed: bool = True) -> str:
-        def convert(binary: str, is_whole: bool = True, is_signed: bool = True) -> str:
+        def convert(binary: str, is_whole: bool = True, is_signed: bool = True) -> int:
             power = len(binary) - 1 - binary.count(' ') if is_whole \
                 else - 1
             decimal = 0
@@ -86,11 +81,6 @@ class FromBinary:
                     decimal += self.decode(binary[index]) * (self.BASE ** power)
                 power -= 1
                 index += 1
-            
-            decimal = str(decimal)
-            
-            if decimal.startswith('0.'):
-                decimal = decimal[2:]
                 
             return decimal
         
@@ -104,23 +94,23 @@ class FromBinary:
             whole_binary, part_binary = binary.split('.')
 
             return \
-                f'{convert(whole_binary)}.{convert(part_binary, is_whole=False)}'
+                str(convert(whole_binary) + convert(part_binary, is_whole=False))
         
-        return convert(binary)
+        binary = str(convert(binary))
+        
+        return binary
                
     def to_hex(self, binary: str = '') -> str:
-        binary_is_negative = binary[0] == '1'
-        if binary_is_negative:
-            binary = BinaryNegative().perform(binary) # two's complement
-        else:
-            binary = self.FORMATTER.perform(binary)
-            
+        is_negative = binary[0] == '1'
+        binary = self.FORMATTER.perform(binary) 
         binary = binary.replace(' ', '') # removes spaces
             
         point_idx = binary.index('.') if '.' in binary else None
         whole_binary = binary[:point_idx]
         
-        if len(whole_binary) % 4 != 0:
+        if whole_binary[0] == '1':
+            whole_binary = (4 - (len(whole_binary) % 4)) * '1' + whole_binary
+        else:
             whole_binary = (4 - (len(whole_binary) % 4)) * '0' + whole_binary
                 
         hex = ''
@@ -140,14 +130,14 @@ class FromBinary:
             for idx in range(4, len(fraction_binary) + 1, 4):
                 dec = int(self.to_decimal(fraction_binary[idx - 4:idx], formatted=False, is_signed=False))
                 hex = hex + self.encode(dec)
-                
+                        
         while hex[0] == '0':
-            hex = hex[1:]
+            if point_idx and hex[0] == '0' and hex[1] == '.':
+                break 
             
+            hex = hex[1:]
+                        
         while hex[-1] == '0':
-            hex = hex[:-2]
+            hex = hex[:-1]
              
-        if binary_is_negative:      
-            return '-' + hex
-        else:
-            return hex
+        return hex

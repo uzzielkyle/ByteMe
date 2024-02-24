@@ -121,6 +121,31 @@ class Interface(CTk):
 
     # Display the Output Screen of Binary Operation
     def perform_binary_operation_output_screen(self, choice, binary_num1, binary_num2):
+            binary_num2 = input("Enter the second binary number: ")
+            
+        try:
+            for char in binary_num1:
+                if char not in ' .-01':
+                    raise
+            
+            if binary_num2:
+                for char in binary_num2:
+                    if char not in ' .-01':
+                        raise
+                
+            self.perform_binary_operation_output_screen(
+                choice=choice, 
+                binary_num1=binary_num1, 
+                binary_num2=binary_num2)
+        except:
+            input('Invalid input.')
+            self.perform_binary_operation_input_screen(choice)
+        
+    def perform_binary_operation_output_screen(self, 
+                                               choice: str, 
+                                               binary_num1: str, 
+                                               binary_num2: str | None):
+
         self.clear_screen()
 
         title = self.BINARY_OPERATIONS_SCREEN_TITLES[choice]

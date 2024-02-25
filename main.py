@@ -35,12 +35,17 @@ class Interface(CTk):
     def __init__(self):
         super().__init__()
         self.title('ByteMe')
-        self.geometry('500x300')
-        self.minsize(320, 320)
-        # self.resizable(width=False, height=False)
+        self.geometry('550x500')
+        self.minsize(500, 500)
         # Modes: "System" (standard), "Dark", "Light"
-        set_appearance_mode("System")
-        set_default_color_theme("assets/themes/carrot.json")
+        set_appearance_mode("Dark")
+
+        if get_appearance_mode() == "Dark":
+            set_default_color_theme("assets/themes/pink.json")
+        else:
+            set_default_color_theme("assets/themes/carrot.json")
+
+        set_widget_scaling(1.5)
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)

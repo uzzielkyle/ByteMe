@@ -60,8 +60,9 @@ class FromDecimal:
 
                 decimal = decimal[1:]
 
-            while decimal.endswith('0'):
-                decimal = decimal[:-1]
+            if '.' in decimal:
+                while decimal.endswith('0'):
+                    decimal = decimal[:-1]
 
             if decimal.startswith('.'):
                 decimal = f'0{decimal}'
